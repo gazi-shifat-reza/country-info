@@ -1,0 +1,37 @@
+fetch('https://restcountries.eu/rest/v2/all')
+.then(res => res.json())
+.then(data => displayCountries(data))
+
+const displayCountries = countries => {
+    const countriesDiv = document.getElementById('countries');
+    countries.forEach(country => {
+        const countryDiv = document.createElement('div')
+        countryDiv.className = 'country'
+        const countryInfo = `
+            <h3 class = 'country-name'>${country.name}</h3>
+            <p>${country.capital}</p>
+            <button onclick = "displayCountryInfo('${country.name}')" > Details </button>
+        `;
+        countryDiv.innerHTML = countryInfo;
+        countriesDiv.appendChild(countryDiv);
+    });
+}
+
+const displayCountryInfo = name => {
+    const url = `https://restcountries.eu/rest/v2/name/${name}`
+    fetch(url)
+    .then(res => res.json())
+    .then(data => renderCountryInfo(data[0]))
+}
+
+const renderCountryInfo = country => {
+    const countryDiv = document.getElementById('country-detail');
+    const countryDetail = `
+    <h1>Country Name: ${country.name}</h1>
+    <h4>Capital: ${country.capital}</h4>
+    <p>Population: ${country.population}</p>
+    <p>Area: ${country.area}</p>
+    <img src = "${country.flag}">
+    `
+    countryDiv.innerHTML = countryDetail;
+}
